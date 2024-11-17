@@ -22,7 +22,7 @@ export function DarkModeToggle() {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
-          fill="currentColor"
+          fill={resolvedTheme === "dark" ? "white" : "black"}
           className="transition-colors duration-300 hover:text-blue-600 dark:hover:text-blue-500"
         >
           {resolvedTheme === "dark" ? (

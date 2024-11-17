@@ -270,19 +270,19 @@ export function Dashboard({ children }: { children: React.ReactNode }) {
                   </MenuButton>
                   <MenuItems
                     transition
-                    className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in dark:border dark:border-gray-300 dark:bg-slate-900"
+                    className="absolute right-0 z-10 mt-2.5 w-40 origin-top-right rounded-xl bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in dark:border dark:border-gray-300 dark:bg-slate-900"
                   >
                     {userNavigation.map((item) => (
                       <MenuItem key={item.name}>
                         <a
                           href={item.href}
-                          className="mx-2 block rounded-md px-3 py-1 text-sm/6 text-gray-900 data-[focus]:bg-gray-50 data-[focus]:outline-none dark:text-gray-100 dark:data-[focus]:bg-slate-700"
+                          className="mx-2 block rounded-md px-4 py-2 text-gray-900 data-[focus]:bg-gray-50 data-[focus]:outline-none dark:text-gray-100 dark:data-[focus]:bg-slate-700"
                         >
                           {item.name}
                         </a>
                       </MenuItem>
                     ))}
-                    <div className="mx-3.5 my-0.5">
+                    <div className="mx-[18px] my-1.5">
                       <DarkModeToggle />
                     </div>
                   </MenuItems>
