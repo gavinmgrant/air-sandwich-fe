@@ -100,8 +100,8 @@ export function Dashboard({ children }: { children: React.ReactNode }) {
                               href={item.href}
                               className={classNames(
                                 pathname === item.href
-                                  ? "bg-gray-50 text-indigo-600 dark:bg-slate-700 dark:text-white"
-                                  : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white",
+                                  ? "bg-gray-50 text-blue-600 dark:bg-slate-700 dark:text-white"
+                                  : "text-gray-700 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white",
                                 "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold",
                               )}
                             >
@@ -109,8 +109,8 @@ export function Dashboard({ children }: { children: React.ReactNode }) {
                                 aria-hidden="true"
                                 className={classNames(
                                   pathname === item.href
-                                    ? "text-indigo-600 dark:text-white"
-                                    : "text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-white",
+                                    ? "text-blue-600 dark:text-white"
+                                    : "text-gray-400 group-hover:text-blue-600 dark:group-hover:text-white",
                                   "size-6 shrink-0",
                                 )}
                               />
@@ -124,11 +124,11 @@ export function Dashboard({ children }: { children: React.ReactNode }) {
                     <li className="mt-auto">
                       <a
                         href="#"
-                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-indigo-600 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white dark:group-hover:text-white"
+                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white dark:group-hover:text-white"
                       >
                         <Cog6ToothIcon
                           aria-hidden="true"
-                          className="size-6 shrink-0 text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-white"
+                          className="size-6 shrink-0 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-white"
                         />
                         Settings
                       </a>
@@ -157,8 +157,8 @@ export function Dashboard({ children }: { children: React.ReactNode }) {
                           href={item.href}
                           className={classNames(
                             pathname === item.href
-                              ? "bg-gray-50 text-indigo-600 dark:bg-slate-700 dark:text-white"
-                              : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white",
+                              ? "bg-gray-50 text-blue-600 dark:bg-slate-700 dark:text-white"
+                              : "text-gray-700 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white",
                             "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold",
                           )}
                         >
@@ -166,8 +166,8 @@ export function Dashboard({ children }: { children: React.ReactNode }) {
                             aria-hidden="true"
                             className={classNames(
                               pathname === item.href
-                                ? "text-indigo-600 dark:text-white"
-                                : "text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-white",
+                                ? "text-blue-600 dark:text-white"
+                                : "text-gray-400 group-hover:text-blue-600 dark:group-hover:text-white",
                               "size-6 shrink-0",
                             )}
                           />
@@ -185,15 +185,15 @@ export function Dashboard({ children }: { children: React.ReactNode }) {
                       pathname === "/dashboard/settings"
                         ? "bg-gray-50 dark:bg-slate-700 dark:text-white"
                         : "",
-                      "group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-indigo-600 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white",
+                      "group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white",
                     )}
                   >
                     <Cog6ToothIcon
                       aria-hidden="true"
                       className={classNames(
                         pathname === "/dashboard/settings"
-                          ? "text-indigo-600 dark:text-white"
-                          : "text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-white",
+                          ? "text-blue-600 dark:text-white"
+                          : "text-gray-400 group-hover:text-blue-600 dark:group-hover:text-white",
                         "size-6 shrink-0",
                       )}
                     />
@@ -292,7 +292,7 @@ export function Dashboard({ children }: { children: React.ReactNode }) {
           </div>
 
           <main className="py-10">
-            <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+            <div className="px-4 sm:px-8">{children}</div>
           </main>
         </div>
       </div>
