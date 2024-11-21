@@ -13,15 +13,17 @@ export function CustomersList() {
     <div>
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold text-gray-900">Customers</h1>
-          <p className="mt-2 text-sm text-gray-700">
+          <h1 className="text-base font-semibold">Customers</h1>
+          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
             These are all of the customers that have signed up for your service.
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <div className="item flex gap-2">
             <Button color="blue">Add customer</Button>
-            <Button color="slate" variant="outline">Bulk add</Button>
+            <Button color="slate" variant="outline">
+              Bulk add
+            </Button>
           </div>
         </div>
       </div>
@@ -33,7 +35,7 @@ export function CustomersList() {
                 <tr>
                   <th
                     scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+                    className="font-semibol py-3.5 pl-4 pr-3 text-left text-sm sm:pl-0"
                   >
                     <a href="#" className="group inline-flex">
                       Name
@@ -47,7 +49,7 @@ export function CustomersList() {
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    className="px-3 py-3.5 text-left text-sm font-semibold"
                   >
                     <a href="#" className="group inline-flex">
                       Email
@@ -64,13 +66,13 @@ export function CustomersList() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-gray-200">
                 {people.map((person) => (
                   <tr key={person.email}>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
                       {person.name}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <td className="whitespace-nowrap px-3 py-4 text-sm">
                       {person.email}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm sm:pr-0">
