@@ -31,7 +31,7 @@ export function ImageUpload({ label = "Upload Image" }: { label?: string }) {
     <div className="col-span-full">
       <label
         htmlFor="file-upload"
-        className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
       >
         {label}
       </label>

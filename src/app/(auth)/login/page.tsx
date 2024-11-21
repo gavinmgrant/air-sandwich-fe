@@ -24,7 +24,7 @@ export default function Login() {
       <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
         Don’t have an account? Enter your email to create one.
       </p>
-      <form action="#" className="mt-10 grid grid-cols-1 gap-y-6">
+      <form action="#" className="mt-8 grid grid-cols-1 gap-y-4">
         <TextField
           label="Email address"
           name="email"

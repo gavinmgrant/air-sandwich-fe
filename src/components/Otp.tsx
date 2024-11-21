@@ -64,7 +64,7 @@ export function Otp() {
   };
 
   return (
-    <form action="#" className="mt-10 grid grid-cols-1 gap-10">
+    <form action="#" className="mt-8 grid grid-cols-1 gap-10">
       <div className="flex items-center gap-2 sm:gap-3">
         {otp.map((digit, index) => (
           <input

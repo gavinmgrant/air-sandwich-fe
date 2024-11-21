@@ -27,7 +27,7 @@ export default function Register() {
       </p>
       <form
         action="#"
-        className="mt-10 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2"
+        className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2"
       >
         <TextField
           label="First name"
