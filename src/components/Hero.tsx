@@ -32,7 +32,7 @@ export function Hero() {
         newsletters that clients love.
       </p>
       <div className="mt-10 flex justify-center gap-x-6">
-        <Button href="/login">Get started</Button>
+        <Button href="/login" variant="solid" color="black">Get started</Button>
       </div>
       <div className="mt-36 lg:mt-44">
         <p className="font-display text-base text-slate-900 dark:text-slate-100">
