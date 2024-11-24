@@ -1,12 +1,12 @@
 "use client";
 
 import useSWR from "swr";
-import { swrFetcher } from "../utils/swrFetcher";
+import { swrFetcher, swrPoster } from "../utils/swrFetcher";
 
 export const useGenerateOtp = (email: string) => {
   const { data, error, mutate } = useSWR(
     `/auth/generate-otp?email=${encodeURIComponent(email)}`,
-    swrFetcher,
+    { fetcher: swrPoster },
   );
 
   return {
