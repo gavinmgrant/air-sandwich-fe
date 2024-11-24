@@ -55,7 +55,7 @@ export const errorHandlers: ErrorHandlers = {
 
       // Perform the token refresh
       const baseUrl =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
       const authPair: AuthPair = await axios.post(
         `${baseUrl}${API_ENDPOINTS.REFRESH_TOKEN}?refreshToken=${refreshToken}`,
       );

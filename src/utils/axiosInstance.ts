@@ -27,7 +27,7 @@ if (!process.env.NEXT_PUBLIC_API_URL) {
 
 // Create an Axios instance with default settings
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api",
   timeout: 10000,
 });
 
@@ -36,7 +36,7 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const authToken = getToken();
     if (authToken) {
-      config.headers["x-access-token"] = `Bearer ${authToken}`;
+      config.headers.Authorization = `Bearer ${authToken}`;
     }
 
     if (process.env.NODE_ENV === "development") {

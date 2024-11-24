@@ -1,6 +1,7 @@
 import { type Metadata } from "next";
 import Link from "next/link";
 
+import { useGenerateOtp } from "@/hooks/useOtp";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
 import { Logo } from "@/components/Logo";
@@ -11,6 +12,15 @@ export const metadata: Metadata = {
 };
 
 export default function Login() {
+  const { isLoading, isError, otp, mutate } = useGenerateOtp("");
+
+  const handleGenerateOtp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    mutate(`/auth/generate-otp?email=${encodeURIComponent(email)}`);
+  };
+
   return (
     <SlimLayout>
       <div className="flex h-10 items-center">
@@ -24,7 +34,10 @@ export default function Login() {
       <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
         Don’t have an account? Enter your email to create one.
       </p>
-      <form action="#" className="mt-8 grid grid-cols-1 gap-y-4">
+      <form
+        onSubmit={(e) => handleGenerateOtp(e)}
+        className="mt-8 grid grid-cols-1 gap-y-4"
+      >
         <TextField
           label="Email address"
           name="email"
