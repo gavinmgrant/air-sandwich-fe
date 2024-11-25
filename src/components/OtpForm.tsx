@@ -1,12 +1,23 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-
+import { useRouter } from 'next/navigation'
+import { useSWRConfig } from "swr";
+import { useVerifyOtp } from "@/hooks/useOtp";
 import { Button } from "@/components/Button";
 
-export function Otp() {
+export function OtpForm() {
+  const router = useRouter()
+  const { cache } = useSWRConfig();
+  const userEmail = cache.get("user-email")?.data as string;
+
   const [otp, setOtp] = useState(Array(6).fill(""));
+  
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const { isVerified, isLoading, isError } = useVerifyOtp(
+    userEmail,
+    otp.join(""),
+  );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
@@ -63,8 +74,18 @@ export function Otp() {
     setOtp(digits);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const otpInput = formData.get("otp") as string;
+    otpInput && setOtp(otpInput.split(""));
+    router.push('/register')
+  };
+
+  console.log("isVerified==>", isVerified);
+
   return (
-    <form action="#" className="mt-8 grid grid-cols-1 gap-10">
+    <form onSubmit={handleSubmit} className="relative mt-8 grid grid-cols-1 gap-10">
       <div className="flex items-center gap-2 sm:gap-3">
         {otp.map((digit, index) => (
           <input
@@ -82,17 +103,17 @@ export function Otp() {
         ))}
       </div>
 
-      <Button
-        href="/register"
-        type="submit"
-        variant="solid"
-        color="blue"
-        className="w-full"
-      >
+      <Button type="submit" variant="solid" color="blue" className="w-full" isLoading={isLoading}>
         <span>
           Verify <span aria-hidden="true">&rarr;</span>
         </span>
       </Button>
+
+      {isError && (
+        <p className="absolute -bottom-8 text-sm">
+          Error occurred while verifying OTP.
+        </p>
+      )}
     </form>
   );
 }

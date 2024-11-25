@@ -2,9 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { BuildingOfficeIcon } from "@heroicons/react/24/outline";
+import {
+  BuildingOfficeIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 
-export function ImageUpload({ label = "Upload Image" }: { label?: string }) {
+export function ImageUpload({
+  label = "Upload Image",
+  isUser = true,
+}: {
+  label?: string;
+  isUser?: boolean;
+}) {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -57,7 +66,11 @@ export function ImageUpload({ label = "Upload Image" }: { label?: string }) {
           </div>
         ) : (
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-gray-200 bg-gray-200 dark:bg-slate-800">
-            <BuildingOfficeIcon className="h-6 w-6 text-gray-500 dark:text-gray-300" />
+            {isUser ? (
+              <UserCircleIcon className="h-6 w-6 text-gray-500 dark:text-gray-300" />
+            ) : (
+              <BuildingOfficeIcon className="h-6 w-6 text-gray-500 dark:text-gray-300" />
+            )}
           </div>
         )}
       </div>

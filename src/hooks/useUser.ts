@@ -1,6 +1,4 @@
-/**
- * Encapsulates the SWR logic for fetching user data.
- */
+"use client"
 
 import useSWR from "swr";
 import { swrFetcher } from "../utils/swrFetcher";

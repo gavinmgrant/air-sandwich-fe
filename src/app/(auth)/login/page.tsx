@@ -22,7 +22,7 @@ export default function Login() {
         Sign in to your account
       </h2>
       <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-        Don't have an account? Enter your email to create one.
+        Don&apos;t have an account? Enter your email to create one.
       </p>
       {/* Client-side form */}
       <LoginForm />

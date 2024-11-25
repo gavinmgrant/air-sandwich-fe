@@ -1,6 +1,8 @@
 import Link from "next/link";
 import clsx from "clsx";
 
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
+
 const baseStyles = {
   solid:
     "group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2",
@@ -41,9 +43,16 @@ type ButtonProps = (
     | (Omit<React.ComponentPropsWithoutRef<"button">, "color"> & {
         href?: undefined;
       })
-  );
+  ) & {
+    isLoading?: boolean;
+  };
 
-export function Button({ className, ...props }: ButtonProps) {
+export function Button({
+  className,
+  isLoading,
+  children,
+  ...props
+}: ButtonProps) {
   props.variant ??= "solid";
   props.color ??= "slate";
 
@@ -57,9 +66,17 @@ export function Button({ className, ...props }: ButtonProps) {
     className,
   );
 
+  const Loader = () => {
+    return <ArrowPathIcon className="h-6 w-6 animate-spin" />;
+  };
+
   return typeof props.href === "undefined" ? (
-    <button className={className} {...props} />
+    <button className={className} {...props}>
+      {isLoading ? <Loader /> : children}
+    </button>
   ) : (
-    <Link className={className} {...props} />
+    <Link className={className} {...props}>
+      {isLoading ? <Loader /> : children}
+    </Link>
   );
 }

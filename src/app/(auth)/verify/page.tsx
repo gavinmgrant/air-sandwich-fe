@@ -1,7 +1,7 @@
 import { type Metadata } from "next";
 import Link from "next/link";
 
-import { Otp } from "@/components/Otp";
+import { OtpForm } from "@/components/OtpForm";
 import { Logo } from "@/components/Logo";
 import { SlimLayout } from "@/components/SlimLayout";
 
@@ -23,7 +23,7 @@ export default function Login() {
       <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
         Enter the 6-digit code we sent to your email address.
       </p>
-      <Otp />
+      <OtpForm />
     </SlimLayout>
   );
 }

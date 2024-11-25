@@ -1,9 +1,9 @@
 "use client";
 
 import useSWR from "swr";
-import { swrFetcher, swrPoster } from "../utils/swrFetcher";
+import { swrPoster } from "@/utils/swrFetcher";
 
-export const useGenerateOtp = (email: string) => {
+export const useGenerateOtp = (email: string) => {  
   const { data, error, mutate } = useSWR(
     `/auth/generate-otp?email=${encodeURIComponent(email)}`,
     { fetcher: swrPoster },
@@ -12,7 +12,7 @@ export const useGenerateOtp = (email: string) => {
   return {
     otp: data,
     isLoading: !error && !data,
-    isError: !!error,
+    isError: email && !!error,
     mutate, // Expose mutate for manual revalidation
   };
 };
@@ -20,13 +20,13 @@ export const useGenerateOtp = (email: string) => {
 export const useVerifyOtp = (email: string, otp: string) => {
   const { data, error, mutate } = useSWR(
     `/auth/verify-otp?email=${encodeURIComponent(email)}&otp=${otp}`,
-    swrFetcher,
+    { fetcher: swrPoster },
   );
 
   return {
     isVerified: data,
     isLoading: !error && !data,
-    isError: !!error,
+    isError: email && otp && !!error,
     mutate, // Expose mutate for manual revalidation
   };
 };

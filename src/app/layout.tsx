@@ -2,6 +2,7 @@ import { type Metadata } from "next";
 import { Inter, Lexend } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import clsx from "clsx";
+import SWRProvider from "@/components/SWRProvider";
 
 import "@/styles/tailwind.css";
 
@@ -44,7 +45,7 @@ export default function RootLayout({
     >
       <body className="flex h-full flex-col bg-white dark:bg-gray-900 dark:text-white">
         <ThemeProvider attribute="class" enableSystem={false}>
-          {children}
+          <SWRProvider>{children}</SWRProvider>
         </ThemeProvider>
       </body>
     </html>
