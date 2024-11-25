@@ -1,6 +1,9 @@
+"use client";
+
+import isAuth from "@/components/isAuth";
 import { Dashboard } from "@/components/Dashboard";
 
-export default function DashboardEmails() {
+const DashboardEmails = () => {
   return (
     <>
       <Dashboard>
@@ -8,4 +11,6 @@ export default function DashboardEmails() {
       </Dashboard>
     </>
   );
-}
+};
+
+export default isAuth(DashboardEmails);

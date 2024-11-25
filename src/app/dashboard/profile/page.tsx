@@ -1,6 +1,10 @@
-import { Dashboard } from "@/components/Dashboard";
+"use client";
 
-export default function DashboardProfile() {
+import isAuth from "@/components/isAuth";
+import { Dashboard } from "@/components/Dashboard";
+import exp from "constants";
+
+const DashboardProfile = () => {
   return (
     <>
       <Dashboard>
@@ -9,3 +13,5 @@ export default function DashboardProfile() {
     </>
   );
 }
+
+export default isAuth(DashboardProfile);

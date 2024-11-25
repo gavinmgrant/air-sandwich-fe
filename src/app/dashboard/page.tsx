@@ -1,6 +1,9 @@
+"use client";
+
+import isAuth from "@/components/isAuth";
 import { Dashboard } from "@/components/Dashboard";
 
-export default function DashboardLanding() {
+const DashboardLanding = () => {
   return (
     <>
       <Dashboard>
@@ -9,3 +12,5 @@ export default function DashboardLanding() {
     </>
   );
 }
+
+export default isAuth(DashboardLanding);

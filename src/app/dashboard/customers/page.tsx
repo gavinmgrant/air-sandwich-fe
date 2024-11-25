@@ -1,7 +1,10 @@
+"use client";
+
+import isAuth from "@/components/isAuth";
 import { Dashboard } from "@/components/Dashboard";
 import { CustomersList } from "@/components/CustomersList";
 
-export default function DashboardCustomers() {
+const DashboardCustomers = () => {
   return (
     <>
       <Dashboard>
@@ -10,3 +13,5 @@ export default function DashboardCustomers() {
     </>
   );
 }
+
+export default isAuth(DashboardCustomers);
