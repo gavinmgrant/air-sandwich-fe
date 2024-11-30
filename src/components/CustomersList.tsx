@@ -2,14 +2,32 @@
 
 import { useState } from "react";
 // import { ChevronDownIcon } from "@heroicons/react/20/solid";
-
+import { formatPhoneNumber } from "@/utils/formatNumbers";
 import { Button } from "@/components/Button";
 import { CustomerModal } from "@/components/CustomerModal";
 
 const people = [
-  { name: "Lindsay Walton", email: "lindsay.walton@example.com" },
-  { name: "Emily Selman", email: "emily.selman@example.com" },
-  { name: "Kristin Watson", email: "kristin.watson@example.com" },
+  {
+    firstName: "Lindsay",
+    lastName: "Walton",
+    phone: "55532423451",
+    email: "lindsay.walton@example.com",
+    isRetired: true,
+  },
+  {
+    firstName: "Emily",
+    lastName: "Selman",
+    phone: "55532423451",
+    email: "emily.selman@example.com",
+    isRetired: true,
+  },
+  {
+    firstName: "Kristin",
+    lastName: "Watson",
+    phone: "55532423451",
+    email: "kristin.watson@example.com",
+    isRetired: false,
+  },
 ];
 
 export function CustomersList() {
@@ -63,7 +81,7 @@ export function CustomersList() {
                       className="font-semibol py-3.5 pl-4 pr-3 text-left text-sm sm:pl-0"
                     >
                       <h3 className="group inline-flex">
-                        Name
+                        First Name
                         {/* <span className="ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200">
                         <ChevronDownIcon
                           aria-hidden="true"
@@ -71,6 +89,26 @@ export function CustomersList() {
                         />
                       </span> */}
                       </h3>
+                    </th>
+                    <th
+                      scope="col"
+                      className="font-semibol py-3.5 pl-4 pr-3 text-left text-sm sm:pl-0"
+                    >
+                      <h3 className="group inline-flex">
+                        Last Name
+                        {/* <span className="ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200">
+                        <ChevronDownIcon
+                          aria-hidden="true"
+                          className="size-5"
+                        />
+                      </span> */}
+                      </h3>
+                    </th>
+                    <th
+                      scope="col"
+                      className="font-semibol py-3.5 pl-4 pr-3 text-left text-sm sm:pl-0"
+                    >
+                      <h3 className="group inline-flex">Phone</h3>
                     </th>
                     <th
                       scope="col"
@@ -86,6 +124,12 @@ export function CustomersList() {
                         </span> */}
                       </h3>
                     </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold"
+                    >
+                      <h3 className="group inline-flex">Retired?</h3>
+                    </th>
                     <th scope="col" className="relative py-3.5 pl-3 pr-0">
                       <span className="sr-only">Edit</span>
                     </th>
@@ -95,10 +139,19 @@ export function CustomersList() {
                   {people.map((person) => (
                     <tr key={person.email}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
-                        {person.name}
+                        {person.firstName}
+                      </td>
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
+                        {person.lastName}
+                      </td>
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
+                        {formatPhoneNumber(person.phone)}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm">
                         {person.email}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        {person.isRetired ? "Yes" : "No"}
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm sm:pr-0">
                         <a onClick={handleEditCustomer}>

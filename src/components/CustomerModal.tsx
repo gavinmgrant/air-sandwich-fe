@@ -1,4 +1,5 @@
 import { Modal } from "@/components/Modal";
+import CustomerForm from "@/components/CustomerForm";
 
 interface CustomerModalProps {
   title: string;
@@ -14,7 +15,7 @@ export function CustomerModal({ title, open, onClose }: CustomerModalProps) {
       open={open}
       onClose={onClose}
     >
-      <div>Customer Modal Content</div>
+      <CustomerForm onClose={onClose} />
     </Modal>
   );
 }
