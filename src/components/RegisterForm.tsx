@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import axiosInstance from "@/utils/axiosInstance";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
@@ -9,93 +10,98 @@ import { ImageUpload } from "@/components/ImageUpload";
 import { RegisterFormData } from "@/types";
 
 export default function RegisterForm() {
+  const { register, handleSubmit, control } = useForm<RegisterFormData>();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const submitDefaultInfo = async (data: RegisterFormData) => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.post("/auth/nux/default-info", data);
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value as Blob | string);
+      });
+
+      const response = await axiosInstance.post(
+        "/auth/nux/default-info",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      );
       return response.data;
     } catch (error) {
       throw new Error(
-        (error as any).response?.data?.message || "Failed to submit default info"
+        (error as any).response?.data?.message ||
+          "Failed to submit default info",
       );
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const formEntries = Array.from(formData.entries());
-    const formValues = Object.fromEntries(formEntries);
-    const {
-      firstName,
-      lastName,
-      companyName,
-      senderEmailName,
-      replyToAddress,
-    } = formValues;
-    const data = {
-      firstName,
-      lastName,
-      companyName,
-      senderEmailName,
-      replyToAddress,
-      userPhotoUrl: formValues["userPhotoUrl"],
-      companyPhotoUrl: formValues["companyPhotoUrl"],
-    } as RegisterFormData;
+  const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
     await submitDefaultInfo(data);
     router.push("/dashboard");
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="relative mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2"
     >
-      <TextField
-        label="First name"
-        name="firstName"
-        type="text"
-        autoComplete="given-name"
-        required
-      />
-      <TextField
-        label="Last name"
-        name="lastName"
-        type="text"
-        autoComplete="family-name"
-        required
-      />
+      <TextField label="First name" type="text" {...register("firstName")} />
+      <TextField label="Last name" type="text" {...register("lastName")} />
       <TextField
         className="col-span-full"
         label="Company name"
-        name="companyName"
         type="text"
-        autoComplete="company-name"
-        required
+        {...register("companyName")}
       />
-      <ImageUpload label="Your photo" isUser={true} />
-      <ImageUpload label="Company logo" isUser={false} />
+
+      <Controller
+        name="userPhotoUrl"
+        control={control}
+        render={({ field }) => (
+          <ImageUpload
+            label="Your photo"
+            isUser={true}
+            value={field.value ? new File([field.value], "userPhoto") : null}
+            onChange={(file) => {
+              field.onChange(file);
+            }}
+          />
+        )}
+      />
+
+      <Controller
+        name="companyPhotoUrl"
+        control={control}
+        render={({ field }) => (
+          <ImageUpload
+            label="Company logo"
+            isUser={false}
+            value={field.value ? new File([field.value], "companyLogo") : null}
+            onChange={(file) => {
+              field.onChange(file);
+            }}
+          />
+        )}
+      />
+
       <TextField
         className="col-span-full"
         label="Sender email address"
-        name="senderEmailName"
         type="email"
-        autoComplete="email"
-        required
+        {...register("senderEmailName")}
       />
       <TextField
         className="col-span-full"
         label="Reply to email address"
-        name="replyToAddress"
         type="email"
-        autoComplete="email"
-        required
+        {...register("replyToAddress")}
       />
+
       <div className="col-span-full mt-4">
         <Button
           type="submit"

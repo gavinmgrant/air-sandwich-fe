@@ -7,34 +7,37 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
+type ImageUploadProps = {
+  label?: string;
+  isUser?: boolean;
+  value?: File | null;
+  onChange?: (file: File | null) => void;
+};
+
 export function ImageUpload({
   label = "Upload Image",
   isUser = true,
-}: {
-  label?: string;
-  isUser?: boolean;
-}) {
-  const [image, setImage] = useState<File | null>(null);
+  value,
+  onChange,
+}: ImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-    }
+    const file = e.target.files?.[0] || null;
+    onChange?.(file);
   };
 
   useEffect(() => {
-    if (image) {
+    if (value) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
       };
-      reader.readAsDataURL(image);
+      reader.readAsDataURL(value);
     } else {
       setPreview(null);
     }
-  }, [image]);
+  }, [value]);
 
   return (
     <div className="col-span-full">
@@ -65,7 +68,7 @@ export function ImageUpload({
             />
           </div>
         ) : (
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-gray-200 bg-gray-200 dark:bg-slate-800">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-gray-200 dark:bg-slate-800">
             {isUser ? (
               <UserCircleIcon className="h-6 w-6 text-gray-500 dark:text-gray-300" />
             ) : (

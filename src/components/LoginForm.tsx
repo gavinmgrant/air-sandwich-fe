@@ -1,38 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from 'next/navigation'
-import { useSWRConfig } from 'swr'
+import { useRouter } from "next/navigation";
+import { useSWRConfig } from "swr";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useGenerateOtp } from "@/hooks/useOtp";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
 
 export default function LoginForm() {
-  const router = useRouter()
-  const [email, setEmail] = useState("");
+  const { register, handleSubmit, getValues } = useForm<{ email: string }>();
+  const router = useRouter();
   const { mutate } = useSWRConfig();
-  const { isLoading, isError } = useGenerateOtp(email);
+  const value = getValues("email");
+  const { isLoading, isError } = useGenerateOtp(value);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const emailInput = formData.get("email") as string;
-    setEmail(emailInput);
+  const onSubmit: SubmitHandler<{ email: string }> = async (data) => {
+    const emailInput = data.email;
     mutate("user-email", emailInput, false);
-    router.push('/verify')
+    router.push("/verify");
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="relative mt-8 grid grid-cols-1 gap-y-4"
     >
       <TextField
         label="Email address"
-        name="email"
         type="email"
-        autoComplete="email"
-        required
+        {...register("email", { required: true })}
       />
       <div className="mt-4">
         <Button

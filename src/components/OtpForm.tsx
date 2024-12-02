@@ -1,109 +1,116 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { useRouter } from 'next/navigation'
+import React, { useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useSWRConfig } from "swr";
+import { useForm, Controller } from "react-hook-form";
 import { useVerifyOtp } from "@/hooks/useOtp";
 import { Button } from "@/components/Button";
 
+interface OtpFormValues {
+  otp: string[];
+}
+
 export function OtpForm() {
-  const router = useRouter()
+  const router = useRouter();
   const { cache } = useSWRConfig();
   const userEmail = cache.get("user-email")?.data as string;
 
-  const [otp, setOtp] = useState(Array(6).fill(""));
-  
+  const { control, handleSubmit, setValue, watch, trigger } =
+    useForm<OtpFormValues>({
+      defaultValues: {
+        otp: Array(6).fill(""),
+      },
+    });
+
+  const otpValues = watch("otp");
+
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const { isVerified, isLoading, isError } = useVerifyOtp(
     userEmail,
-    otp.join(""),
+    otpValues.join(""),
   );
+  console.log('isVerified ==>', isVerified);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (
-      !/^[0-9]{1}$/.test(e.key) &&
-      e.key !== "Backspace" &&
-      e.key !== "Delete" &&
-      e.key !== "Tab" &&
-      !e.metaKey
-    ) {
-      e.preventDefault();
-    }
+  const handleInputChange = (index: number, value: string) => {
+    if (!/^\d?$/.test(value)) return; // Allow only digits or empty values
+    setValue(`otp.${index}`, value);
 
-    if (e.key === "Delete" || e.key === "Backspace") {
-      const index = inputRefs.current.indexOf(e.target as HTMLInputElement);
-      if (index > 0) {
-        setOtp((prevOtp) => [
-          ...prevOtp.slice(0, index - 1),
-          "",
-          ...prevOtp.slice(index),
-        ]);
-        inputRefs.current[index - 1]?.focus();
-      }
+    // Move focus to the next field if input is filled
+    if (value && index < otpValues.length - 1) {
+      inputRefs.current[index + 1]?.focus();
     }
   };
 
-  interface HandleInputEvent extends React.ChangeEvent<HTMLInputElement> {}
-
-  const handleInput = (e: HandleInputEvent) => {
-    const { target } = e;
-    const index = inputRefs.current.indexOf(target);
-    if (target.value) {
-      setOtp((prevOtp) => [
-        ...prevOtp.slice(0, index),
-        target.value,
-        ...prevOtp.slice(index + 1),
-      ]);
-      if (index < otp.length - 1) {
-        inputRefs.current[index + 1]?.focus();
-      }
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    if (e.key === "Backspace" && !otpValues[index] && index > 0) {
+      setValue(`otp.${index - 1}`, "");
+      inputRefs.current[index - 1]?.focus();
     }
-  };
-
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.select();
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
     const text = e.clipboardData.getData("text");
-    if (!new RegExp(`^[0-9]{${otp.length}}$`).test(text)) {
-      return;
-    }
+    if (!new RegExp(`^[0-9]{${otpValues.length}}$`).test(text)) return;
+
     const digits = text.split("");
-    setOtp(digits);
+    digits.forEach((digit, index) => {
+      setValue(`otp.${index}`, digit);
+    });
+
+    inputRefs.current[digits.length - 1]?.focus();
+    trigger(); // Trigger validation after paste
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const otpInput = formData.get("otp") as string;
-    otpInput && setOtp(otpInput.split(""));
-    router.push('/register')
+  const onSubmit = () => {
+    if (otpValues.every((digit) => digit)) {
+      console.log("Submitted OTP:", otpValues.join(""));
+      router.push("/register");
+    } else {
+      console.error("OTP is incomplete.");
+    }
   };
-
-  console.log("isVerified==>", isVerified);
 
   return (
-    <form onSubmit={handleSubmit} className="relative mt-8 grid grid-cols-1 gap-10">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="relative mt-8 grid grid-cols-1 gap-10"
+    >
       <div className="flex items-center gap-2 sm:gap-3">
-        {otp.map((digit, index) => (
-          <input
+        {otpValues.map((_, index) => (
+          <Controller
             key={index}
-            type="text"
-            maxLength={1}
-            value={digit}
-            onChange={handleInput}
-            onKeyDown={handleKeyDown}
-            onFocus={handleFocus}
-            onPaste={handlePaste}
-            ref={(el) => (inputRefs.current[index] = el)}
-            className="shadow-xs border-stroke flex w-12 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 p-2 text-center text-3xl font-medium text-gray-900 outline-none focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 dark:bg-slate-800 dark:text-gray-100 dark:focus:bg-slate-900 sm:w-[56px] sm:text-4xl"
+            name={`otp.${index}`}
+            control={control}
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                maxLength={1}
+                ref={(el) => (inputRefs.current[index] = el)}
+                onChange={(e) => handleInputChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                onFocus={(e) => e.target.select()}
+                onPaste={handlePaste}
+                className="shadow-xs border-stroke flex w-12 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 p-2 text-center text-3xl font-medium text-gray-900 outline-none focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 dark:bg-slate-800 dark:text-gray-100 dark:focus:bg-slate-900 sm:w-[56px] sm:text-4xl"
+              />
+            )}
           />
         ))}
       </div>
 
-      <Button type="submit" variant="solid" color="blue" className="w-full" isLoading={isLoading}>
+      <Button
+        type="submit"
+        variant="solid"
+        color="blue"
+        className="w-full"
+        isLoading={isLoading}
+      >
         <span>
           Verify <span aria-hidden="true">&rarr;</span>
         </span>

@@ -17,7 +17,7 @@ export default function CustomerForm({
   onClose,
   activeCustomer,
 }: CustomerFormProps) {
-  const { register, handleSubmit, getValues, reset, control } = useForm<CustomerFormData>();
+  const { register, handleSubmit, reset, control } = useForm<CustomerFormData>();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,9 +42,8 @@ export default function CustomerForm({
     // }
   };
 
-  const onSubmit: SubmitHandler<CustomerFormData> = async () => {
-    const currentValues = getValues();
-    await submitDefaultInfo(currentValues);
+  const onSubmit: SubmitHandler<CustomerFormData> = async (data) => {
+    await submitDefaultInfo(data);
     onClose();
   };
 
