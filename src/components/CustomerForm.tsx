@@ -74,6 +74,12 @@ export default function CustomerForm({
         type="email"
         {...register("email")}
       />
+      <TextField
+        className="col-span-full"
+        label="Mailing address"
+        type="text"
+        {...register("address")}
+      />
       <Controller
         name="isRetired"
         control={control}

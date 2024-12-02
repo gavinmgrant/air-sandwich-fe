@@ -21,6 +21,7 @@ export function CustomersList() {
         lastName: "Walton",
         phone: "55532423451",
         email: "lindsay.walton@example.com",
+        address: "1234 Elm St Los Angeles, CA 90001",
         isRetired: true,
       },
       {
@@ -28,6 +29,7 @@ export function CustomersList() {
         lastName: "Selman",
         phone: "55532423451",
         email: "emily.selman@example.com",
+        address: "1234 100th St New York, NY 10001",
         isRetired: true,
       },
       {
@@ -35,6 +37,7 @@ export function CustomersList() {
         lastName: "Watson",
         phone: "55532423451",
         email: "kristin.watson@example.com",
+        address: "1234 1st St San Francisco, CA 94101",
         isRetired: false,
       },
     ];
@@ -137,6 +140,12 @@ export function CustomersList() {
                     </th>
                     <th
                       scope="col"
+                      className="font-semibol py-3.5 pl-4 pr-3 text-left text-sm sm:pl-0"
+                    >
+                      <h3 className="group inline-flex">Address</h3>
+                    </th>
+                    <th
+                      scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold"
                     >
                       <h3 className="group inline-flex">Retired?</h3>
@@ -160,6 +169,9 @@ export function CustomersList() {
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm">
                         {customer.email}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        {customer.address}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm">
                         {customer.isRetired ? "Yes" : "No"}

@@ -3,5 +3,6 @@ export interface CustomerFormData {
   lastName: string;
   phone: string;
   email: string;
+  address: string;
   isRetired: boolean;
 }
