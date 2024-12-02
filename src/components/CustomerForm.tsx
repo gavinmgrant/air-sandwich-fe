@@ -1,29 +1,31 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import axiosInstance from "@/utils/axiosInstance";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
 import { Toggle } from "@/components/Toggle";
-import { formatPhoneNumber } from "@/utils/formatNumbers";
+import { CustomerFormData } from "@/types";
 
-interface CustomerFormData {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  isRetired: boolean;
+interface CustomerFormProps {
+  onClose: () => void;
+  activeCustomer?: CustomerFormData;
 }
 
-export default function CustomerForm({ onClose }: { onClose: () => void }) {
+export default function CustomerForm({
+  onClose,
+  activeCustomer,
+}: CustomerFormProps) {
+  const { register, handleSubmit, getValues, reset, control } = useForm<CustomerFormData>();
+
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<CustomerFormData>({
-    firstName: "Test",
-    lastName: "Person",
-    phone: "5555555555",
-    email: "test@email.com",
-    isRetired: false,
-  });
+
+  useEffect(() => {
+    if (activeCustomer) {
+      reset(activeCustomer); // Reset the form with the active customer data
+    }
+  }, [activeCustomer, reset]);
 
   const submitDefaultInfo = async (data: CustomerFormData) => {
     // TODO: Implement this function
@@ -40,80 +42,50 @@ export default function CustomerForm({ onClose }: { onClose: () => void }) {
     // }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await submitDefaultInfo(formData);
+  const onSubmit: SubmitHandler<CustomerFormData> = async () => {
+    const currentValues = getValues();
+    await submitDefaultInfo(currentValues);
     onClose();
   };
 
-  useEffect(() => {
-    // setFormData({
-    //   firstName: "",
-    //   lastName: "",
-    //   phone: "",
-    //   email: "",
-    //   isRetired: false,
-    // });
-  }, []);
-
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="relative mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2"
     >
       <TextField
         label="First name"
-        name="firstName"
         type="text"
-        autoComplete="given-name"
-        value={formData.firstName}
-        onChange={(e) =>
-          setFormData((prev) => ({ ...prev, firstName: e.target.value }))
-        }
-        required
+        {...register("firstName")}
       />
       <TextField
         label="Last name"
-        name="lastName"
         type="text"
-        autoComplete="family-name"
-        value={formData.lastName}
-        onChange={(e) =>
-          setFormData((prev) => ({ ...prev, lastName: e.target.value }))
-        }
-        required
+        {...register("lastName")}
       />
       <TextField
         className="col-span-full"
-        label="Phone number"
-        name="phone"
         type="tel"
-        autoComplete="tel"
-        value={formatPhoneNumber(formData.phone)}
-        onChange={(e) =>
-          setFormData((prev) => ({ ...prev, phone: e.target.value }))
-        }
-        required
+        label="Phone number"
+        {...register("phone")}
       />
       <TextField
         className="col-span-full"
         label="Email address"
-        name="email"
         type="email"
-        autoComplete="email"
-        value={formData.email}
-        onChange={(e) =>
-          setFormData((prev) => ({ ...prev, email: e.target.value }))
-        }
-        required
+        {...register("email")}
       />
-      <Toggle
-        label="Retired?"
-        enabled={formData.isRetired}
-        onToggle={(isRetired) =>
-          setFormData((prev) => ({ ...prev, isRetired }))
-        }
-        text={formData.isRetired ? "Yes" : "No"}
+      <Controller
+        name="isRetired"
+        control={control}
+        render={({ field }) => (
+          <Toggle
+            label="Retired?"
+            text={field.value ? "Yes" : "No"}
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
       />
       <div className="col-span-full mt-4">
         <Button

@@ -6,16 +6,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
 import { ImageUpload } from "@/components/ImageUpload";
-
-interface RegisterFormData {
-  firstName: string;
-  lastName: string;
-  companyName: string;
-  senderEmailName: string;
-  replyToAddress: string;
-  userPhotoUrl?: string; 
-  companyPhotoUrl?: string;
-}
+import { RegisterFormData } from "@/types";
 
 export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);

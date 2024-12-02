@@ -1,54 +1,31 @@
 "use client";
 
-import { useState, useId } from "react";
+import { useId } from "react";
 import { Switch } from "@headlessui/react";
 import { Label } from "@/components/Fields";
 
 type ToggleProps = {
   label?: string;
   text?: string;
-  enabled?: boolean;
-  onToggle?: (enabled: boolean) => void;
+  value?: boolean;
+  onChange?: (value: boolean) => void;
 };
 
-export function Toggle({
-  label,
-  text,
-  enabled: controlledEnabled,
-  onToggle,
-}: ToggleProps) {
-  // Internal state for uncontrolled usage
-  const [internalEnabled, setInternalEnabled] = useState(false);
+export function Toggle({ label, text, value, onChange }: ToggleProps) {
+  const id = useId();
 
-  // Determine if the component is controlled
-  const isControlled = controlledEnabled !== undefined;
-
-  // Compute the current enabled state
-  const enabled = isControlled ? controlledEnabled : internalEnabled;
-
-  // Handle toggle change
   const handleToggle = () => {
-    const newEnabled = !enabled;
-
-    // Update internal state if uncontrolled
-    if (!isControlled) {
-      setInternalEnabled(newEnabled);
-    }
-
-    // Notify parent of the change
-    if (onToggle) {
-      onToggle(newEnabled);
+    if (onChange) {
+      onChange(!value);
     }
   };
-
-  let id = useId();
 
   return (
     <div className="flex flex-col items-start">
       {label && <Label id={id}>{label}</Label>}
       <div className="flex items-center gap-4">
         <Switch
-          checked={enabled}
+          checked={value}
           onChange={handleToggle}
           className="group relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-600 focus:ring-offset-2 data-[checked]:bg-blue-600 dark:bg-slate-700 dark:data-[checked]:bg-slate-400"
         >

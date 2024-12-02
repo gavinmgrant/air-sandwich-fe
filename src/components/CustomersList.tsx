@@ -1,44 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
 // import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { formatPhoneNumber } from "@/utils/formatNumbers";
 import { Button } from "@/components/Button";
 import { CustomerModal } from "@/components/CustomerModal";
-
-const people = [
-  {
-    firstName: "Lindsay",
-    lastName: "Walton",
-    phone: "55532423451",
-    email: "lindsay.walton@example.com",
-    isRetired: true,
-  },
-  {
-    firstName: "Emily",
-    lastName: "Selman",
-    phone: "55532423451",
-    email: "emily.selman@example.com",
-    isRetired: true,
-  },
-  {
-    firstName: "Kristin",
-    lastName: "Watson",
-    phone: "55532423451",
-    email: "kristin.watson@example.com",
-    isRetired: false,
-  },
-];
+import { CustomerFormData } from "@/types";
 
 export function CustomersList() {
+  const [customers, setCustomers] = useState<CustomerFormData[]>([]);
+  const [activeCustomer, setActiveCustomer] = useState<CustomerFormData>();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
 
+  useEffect(() => {
+    // TODO: Fetch customers from the server
+    const fetchedCustomers: CustomerFormData[] = [
+      {
+        firstName: "Lindsay",
+        lastName: "Walton",
+        phone: "55532423451",
+        email: "lindsay.walton@example.com",
+        isRetired: true,
+      },
+      {
+        firstName: "Emily",
+        lastName: "Selman",
+        phone: "55532423451",
+        email: "emily.selman@example.com",
+        isRetired: true,
+      },
+      {
+        firstName: "Kristin",
+        lastName: "Watson",
+        phone: "55532423451",
+        email: "kristin.watson@example.com",
+        isRetired: false,
+      },
+    ];
+    setCustomers(fetchedCustomers);
+  }, []);
+
   const handleAddCustomer = () => {
+    setActiveCustomer(undefined);
     setModalTitle("Add customer");
     setModalOpen(true);
   };
-  const handleEditCustomer = () => {
+
+  const handleEditCustomer = (index: number) => {
+    setActiveCustomer(customers[index]);
     setModalTitle("Edit customer");
     setModalOpen(true);
   };
@@ -49,6 +59,7 @@ export function CustomersList() {
         title={modalTitle}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        activeCustomer={activeCustomer}
       />
       <div>
         <div className="sm:flex sm:items-center">
@@ -136,27 +147,25 @@ export function CustomersList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {people.map((person) => (
-                    <tr key={person.email}>
+                  {customers.map((customer, index) => (
+                    <tr key={customer.email}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
-                        {person.firstName}
+                        {customer.firstName}
                       </td>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
-                        {person.lastName}
+                        {customer.lastName}
                       </td>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
-                        {formatPhoneNumber(person.phone)}
+                        {formatPhoneNumber(customer.phone)}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm">
-                        {person.email}
+                        {customer.email}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm">
-                        {person.isRetired ? "Yes" : "No"}
+                        {customer.isRetired ? "Yes" : "No"}
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm sm:pr-0">
-                        <a onClick={handleEditCustomer}>
-                          Edit<span className="sr-only">, {person.name}</span>
-                        </a>
+                        <a onClick={() => handleEditCustomer(index)}>Edit</a>
                       </td>
                     </tr>
                   ))}
