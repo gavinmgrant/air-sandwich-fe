@@ -12,8 +12,8 @@ const API_ENDPOINTS = {
 // Utility to clear user session and redirect to login
 const clearUserSession = () => {
   console.warn("Clearing user session and redirecting to login...");
-  window.localStorage.removeItem("x-access-token");
-  window.localStorage.removeItem("x-refresh-token");
+  window.localStorage.removeItem("accessToken");
+  window.localStorage.removeItem("refreshToken");
   window.localStorage.removeItem("user");
   window.location.href = "/login";
 };
@@ -43,7 +43,7 @@ export const errorHandlers: ErrorHandlers = {
   ACCESS_TOKEN_EXPIRED: async (api, originalRequest) => {
     try {
       // Check if refresh token exists
-      const refreshToken = window.localStorage.getItem("x-refresh-token");
+      const refreshToken = window.localStorage.getItem("refreshToken");
       if (!refreshToken) {
         console.error("No refresh token available.");
         clearUserSession();
@@ -61,14 +61,14 @@ export const errorHandlers: ErrorHandlers = {
       );
 
       // Store the new tokens
-      window.localStorage.setItem("x-access-token", authPair.data.accessToken);
+      window.localStorage.setItem("accessToken", authPair.data.accessToken);
       window.localStorage.setItem(
-        "x-refresh-token",
+        "refreshToken",
         authPair.data.refreshToken,
       );
 
       // Update request headers with the new access token
-      retryRequest.headers["x-access-token"] =
+      retryRequest.headers["accessToken"] =
         `Bearer ${authPair.data.accessToken}`;
 
       // Retry the original request with updated tokens

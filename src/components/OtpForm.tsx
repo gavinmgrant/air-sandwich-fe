@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { use, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSWRConfig } from "swr";
 import { useForm, Controller } from "react-hook-form";
 import { useVerifyOtp } from "@/hooks/useOtp";
 import { Button } from "@/components/Button";
+import { useIsRegistered } from "@/hooks/useIsRegistered";
 
 interface OtpFormValues {
   otp: string[];
@@ -15,23 +16,24 @@ export function OtpForm() {
   const router = useRouter();
   const { cache } = useSWRConfig();
   const userEmail = cache.get("user-email")?.data as string;
-
-  const { control, handleSubmit, setValue, watch, trigger } =
-    useForm<OtpFormValues>({
-      defaultValues: {
-        otp: Array(6).fill(""),
-      },
-    });
+  const {
+    isRegistered,
+    checkIsRegistered,
+    isLoading: isCheckingRegistration,
+  } = useIsRegistered();
+  const { control, handleSubmit, setValue, watch } = useForm<OtpFormValues>({
+    defaultValues: {
+      otp: Array(6).fill(""),
+    },
+  });
 
   const otpValues = watch("otp");
-
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const { isVerified, isLoading, isError } = useVerifyOtp(
+  const { verifyOtp, isVerified, isLoading, isError } = useVerifyOtp(
     userEmail,
     otpValues.join(""),
   );
-  console.log('isVerified ==>', isVerified);
 
   const handleInputChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return; // Allow only digits or empty values
@@ -64,13 +66,25 @@ export function OtpForm() {
     });
 
     inputRefs.current[digits.length - 1]?.focus();
-    trigger(); // Trigger validation after paste
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (otpValues.every((digit) => digit)) {
-      console.log("Submitted OTP:", otpValues.join(""));
-      router.push("/register");
+      try {
+        const result = await verifyOtp();
+        if (result) {
+          let isRegistered = await checkIsRegistered(); // Explicitly call the function to check registration
+          if (isRegistered) {
+            router.push("/dashboard");
+          } else {
+            router.push("/register");
+          }
+        } else {
+          console.error("OTP verification failed.");
+        }
+      } catch (err) {
+        console.error("Error during OTP verification:", err);
+      }
     } else {
       console.error("OTP is incomplete.");
     }

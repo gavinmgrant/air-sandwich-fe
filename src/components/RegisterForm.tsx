@@ -8,6 +8,7 @@ import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
 import { ImageUpload } from "@/components/ImageUpload";
 import { RegisterFormData } from "@/types";
+import { swrPoster } from "@/utils/swrFetcher";
 
 export default function RegisterForm() {
   const { register, handleSubmit, control } = useForm<RegisterFormData>();
@@ -22,13 +23,8 @@ export default function RegisterForm() {
         formData.append(key, value as Blob | string);
       });
 
-      const response = await axiosInstance.post(
-        "/auth/nux/default-info",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        },
-      );
+      //use swrPoster to post the data
+      const response = await swrPoster(`/nux/default-info`, formData);
       return response.data;
     } catch (error) {
       throw new Error(

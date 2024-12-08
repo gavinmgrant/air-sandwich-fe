@@ -1,23 +1,24 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSWRConfig } from "swr";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useGenerateOtp } from "@/hooks/useOtp";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
 
 export default function LoginForm() {
-  const { register, handleSubmit, getValues } = useForm<{ email: string }>();
+  const { register, handleSubmit } = useForm<{ email: string }>();
   const router = useRouter();
-  const { mutate } = useSWRConfig();
-  const value = getValues("email");
-  const { isLoading, isError } = useGenerateOtp(value);
+  const { generateOtp, isLoading, isError } = useGenerateOtp();
 
   const onSubmit: SubmitHandler<{ email: string }> = async (data) => {
     const emailInput = data.email;
-    mutate("user-email", emailInput, false);
-    router.push("/verify");
+    // set email to localStorage
+    localStorage.setItem("user-email", emailInput);
+    await generateOtp(emailInput);
+    if (!isError) {
+      router.push("/verify");
+    }
   };
 
   return (
