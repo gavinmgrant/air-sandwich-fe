@@ -1,3 +1,8 @@
-// TODO: implement authentication logic
-
-export const isAuthenticated = true;
+export const isAuthenticated = () => {
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
+  if (accessToken && refreshToken) {
+    return true;
+  }
+  return false;
+}

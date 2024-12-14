@@ -55,10 +55,11 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.error("Response Error:", error);
     const originalRequest = error.config;
-    const errorCode = error?.response?.data?.error
-      ?.code as keyof typeof errorHandlers;
-
+    const errorCode = error?.response?.data
+      ?.error as keyof typeof errorHandlers;
+    console.log("Error code:", errorCode);
     if (errorHandlers[errorCode]) {
       return errorHandlers[errorCode](axiosInstance, originalRequest);
     }

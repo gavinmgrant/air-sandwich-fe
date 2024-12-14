@@ -1,5 +1,5 @@
 /**
- * Defines the SWR fetcher, which SWR uses to make API calls.
+ * Defines the SWR fetcher, which SWR uses to make GET API calls.
  */
 
 import axiosInstance from "./axiosInstance";
@@ -16,6 +16,10 @@ export const swrFetcher = (url: string) => {
     })
     .then((res) => res.data);
 };
+
+/**
+ * Defines the SWR poster, which SWR uses to make POST API calls.
+ */
 
 export const swrPoster = (url: string, data: any) => {
   // Retrieve the access token from localStorage

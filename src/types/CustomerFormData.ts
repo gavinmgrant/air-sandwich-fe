@@ -5,4 +5,5 @@ export interface CustomerFormData {
   email: string;
   address: string;
   isRetired: boolean;
+  workPlace: string;
 }

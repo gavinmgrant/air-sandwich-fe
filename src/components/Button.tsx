@@ -1,7 +1,6 @@
 import Link from "next/link";
 import clsx from "clsx";
-
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { Loader } from "@/components/Loader";
 
 const baseStyles = {
   solid:
@@ -65,10 +64,6 @@ export function Button({
         : undefined,
     className,
   );
-
-  const Loader = () => {
-    return <ArrowPathIcon className="h-6 w-6 animate-spin" />;
-  };
 
   return typeof props.href === "undefined" ? (
     <button className={className} {...props}>

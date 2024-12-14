@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import axiosInstance from "@/utils/axiosInstance";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
 import { Toggle } from "@/components/Toggle";
 import { CustomerFormData } from "@/types";
+import { swrPoster } from "@/utils/swrUtils";
 
 interface CustomerFormProps {
   onClose: () => void;
@@ -17,7 +17,9 @@ export default function CustomerForm({
   onClose,
   activeCustomer,
 }: CustomerFormProps) {
-  const { register, handleSubmit, reset, control } = useForm<CustomerFormData>();
+  const { register, handleSubmit, reset, control } = useForm<CustomerFormData>({
+    defaultValues: { isRetired: false },
+  });
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,18 +30,9 @@ export default function CustomerForm({
   }, [activeCustomer, reset]);
 
   const submitDefaultInfo = async (data: CustomerFormData) => {
-    // TODO: Implement this function
-    // setIsLoading(true);
-    // try {
-    //   const response = await axiosInstance.post("/customers", data);
-    //   return response.data;
-    // } catch (error) {
-    //   throw new Error(
-    //     (error as any).response?.data?.message || "Failed to save customer info"
-    //   );
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    setIsLoading(true);
+    await swrPoster("/customers/", data);
+    setIsLoading(false);
   };
 
   const onSubmit: SubmitHandler<CustomerFormData> = async (data) => {
@@ -52,16 +45,8 @@ export default function CustomerForm({
       onSubmit={handleSubmit(onSubmit)}
       className="relative mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2"
     >
-      <TextField
-        label="First name"
-        type="text"
-        {...register("firstName")}
-      />
-      <TextField
-        label="Last name"
-        type="text"
-        {...register("lastName")}
-      />
+      <TextField label="First name" type="text" {...register("firstName")} />
+      <TextField label="Last name" type="text" {...register("lastName")} />
       <TextField
         className="col-span-full"
         type="tel"
@@ -79,6 +64,12 @@ export default function CustomerForm({
         label="Mailing address"
         type="text"
         {...register("address")}
+      />
+      <TextField
+        className="col-span-full"
+        label="Workplace"
+        type="text"
+        {...register("workPlace")}
       />
       <Controller
         name="isRetired"

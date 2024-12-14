@@ -3,12 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import axiosInstance from "@/utils/axiosInstance";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
 import { ImageUpload } from "@/components/ImageUpload";
 import { RegisterFormData } from "@/types";
-import { swrPoster } from "@/utils/swrFetcher";
+import { swrPoster } from "@/utils/swrUtils";
 
 export default function RegisterForm() {
   const { register, handleSubmit, control } = useForm<RegisterFormData>();
@@ -23,10 +22,15 @@ export default function RegisterForm() {
         formData.append(key, value as Blob | string);
       });
 
-      //use swrPoster to post the data
+      // use swrPoster to post the data
       const response = await swrPoster(`/nux/default-info`, formData);
+      let authPair: any = await swrPoster("/context/default", {});
+      console.log("authPair ==>", authPair);
+      window.localStorage.setItem("accessToken", authPair.accessToken);
+      window.localStorage.setItem("refreshToken", authPair.refreshToken);
       return response.data;
     } catch (error) {
+      console.log("error", error);
       throw new Error(
         (error as any).response?.data?.message ||
           "Failed to submit default info",

@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-// import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { formatPhoneNumber } from "@/utils/formatNumbers";
 import { Button } from "@/components/Button";
 import { CustomerModal } from "@/components/CustomerModal";
+import { Loader } from "@/components/Loader";
 import { CustomerFormData } from "@/types";
+import { swrPoster } from "@/utils/swrUtils";
 
 export function CustomersList() {
   const [customers, setCustomers] = useState<CustomerFormData[]>([]);
@@ -13,35 +14,14 @@ export function CustomersList() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
 
-  useEffect(() => {
-    // TODO: Fetch customers from the server
-    const fetchedCustomers: CustomerFormData[] = [
-      {
-        firstName: "Lindsay",
-        lastName: "Walton",
-        phone: "55532423451",
-        email: "lindsay.walton@example.com",
-        address: "1234 Elm St Los Angeles, CA 90001",
-        isRetired: true,
-      },
-      {
-        firstName: "Emily",
-        lastName: "Selman",
-        phone: "55532423451",
-        email: "emily.selman@example.com",
-        address: "1234 100th St New York, NY 10001",
-        isRetired: true,
-      },
-      {
-        firstName: "Kristin",
-        lastName: "Watson",
-        phone: "55532423451",
-        email: "kristin.watson@example.com",
-        address: "1234 1st St San Francisco, CA 94101",
-        isRetired: false,
-      },
-    ];
+  const fetchCustomers = async () => {
+    let req = await swrPoster("/customers/all", {});
+    const fetchedCustomers: CustomerFormData[] = req.content;
     setCustomers(fetchedCustomers);
+  };
+
+  useEffect(() => {
+    fetchCustomers();
   }, []);
 
   const handleAddCustomer = () => {
@@ -56,12 +36,17 @@ export function CustomersList() {
     setModalOpen(true);
   };
 
+  const handleModalClose = () => {
+    fetchCustomers();
+    setModalOpen(false);
+  };
+
   return (
     <>
       <CustomerModal
         title={modalTitle}
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={handleModalClose}
         activeCustomer={activeCustomer}
       />
       <div>
@@ -84,108 +69,95 @@ export function CustomersList() {
             </div>
           </div>
         </div>
-        <div className="mt-8 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      className="font-semibol py-3.5 pl-4 pr-3 text-left text-sm sm:pl-0"
-                    >
-                      <h3 className="group inline-flex">
-                        First Name
-                        {/* <span className="ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200">
-                        <ChevronDownIcon
-                          aria-hidden="true"
-                          className="size-5"
-                        />
-                      </span> */}
-                      </h3>
-                    </th>
-                    <th
-                      scope="col"
-                      className="font-semibol py-3.5 pl-4 pr-3 text-left text-sm sm:pl-0"
-                    >
-                      <h3 className="group inline-flex">
-                        Last Name
-                        {/* <span className="ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200">
-                        <ChevronDownIcon
-                          aria-hidden="true"
-                          className="size-5"
-                        />
-                      </span> */}
-                      </h3>
-                    </th>
-                    <th
-                      scope="col"
-                      className="font-semibol py-3.5 pl-4 pr-3 text-left text-sm sm:pl-0"
-                    >
-                      <h3 className="group inline-flex">Phone</h3>
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold"
-                    >
-                      <h3 className="group inline-flex">
-                        Email
-                        {/* <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
-                          <ChevronDownIcon
-                            aria-hidden="true"
-                            className="invisible ml-2 size-5 flex-none rounded text-gray-400 group-hover:visible group-focus:visible"
-                          />
-                        </span> */}
-                      </h3>
-                    </th>
-                    <th
-                      scope="col"
-                      className="font-semibol py-3.5 pl-4 pr-3 text-left text-sm sm:pl-0"
-                    >
-                      <h3 className="group inline-flex">Address</h3>
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold"
-                    >
-                      <h3 className="group inline-flex">Retired?</h3>
-                    </th>
-                    <th scope="col" className="relative py-3.5 pl-3 pr-0">
-                      <span className="sr-only">Edit</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {customers.map((customer, index) => (
-                    <tr key={customer.email}>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
-                        {customer.firstName}
-                      </td>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
-                        {customer.lastName}
-                      </td>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
-                        {formatPhoneNumber(customer.phone)}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
-                        {customer.email}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
-                        {customer.address}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm">
-                        {customer.isRetired ? "Yes" : "No"}
-                      </td>
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm sm:pr-0">
-                        <a onClick={() => handleEditCustomer(index)}>Edit</a>
-                      </td>
+
+        {!customers.length ? (
+          <div className="flex h-64 w-full items-center justify-center">
+            <Loader />
+          </div>
+        ) : (
+          <div className="mt-8 flow-root">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold sm:pl-0"
+                      >
+                        <h3 className="group inline-flex">First Name</h3>
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold sm:pl-0"
+                      >
+                        <h3 className="group inline-flex">Last Name</h3>
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold sm:pl-0"
+                      >
+                        <h3 className="group inline-flex">Phone</h3>
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold sm:pl-0"
+                      >
+                        <h3 className="group inline-flex">Email</h3>
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold sm:pl-0"
+                      >
+                        <h3 className="group inline-flex">Address</h3>
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-left text-sm font-semibold sm:pl-0"
+                      >
+                        <h3 className="group inline-flex">Retired?</h3>
+                      </th>
+                      <th scope="col" className="relative py-3.5 pl-3 pr-0">
+                        <span className="sr-only">Edit</span>
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {customers.map((customer, index) => (
+                      <tr key={customer.email}>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
+                          {customer.firstName}
+                        </td>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
+                          {customer.lastName}
+                        </td>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
+                          {formatPhoneNumber(customer.phone)}
+                        </td>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
+                          {customer.email}
+                        </td>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
+                          {customer.address}
+                        </td>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
+                          {customer.isRetired ? "Yes" : "No"}
+                        </td>
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm sm:pr-0">
+                          <a onClick={() => handleEditCustomer(index)}>
+                            <Button color="slate" variant="outline">
+                              Edit
+                            </Button>
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

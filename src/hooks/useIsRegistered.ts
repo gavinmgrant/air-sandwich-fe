@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { swrFetcher } from "@/utils/swrFetcher";
+import { swrFetcher } from "@/utils/swrUtils";
 
 export const useIsRegistered = () => {
   const [isLoading, setIsLoading] = useState(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { swrFetcher, swrPoster } from "@/utils/swrFetcher";
+import { swrPoster } from "@/utils/swrUtils";
 
 export const useGenerateOtp = () => {
   const [isLoading, setIsLoading] = useState(false);
