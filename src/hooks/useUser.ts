@@ -1,7 +1,7 @@
 "use client"
 
 import useSWR from "swr";
-import { swrFetcher } from "../utils/swrFetcher";
+import { swrFetcher } from "../utils/swrUtils";
 
 export const useUser = (userId: string) => {
   const { data, error, mutate } = useSWR(

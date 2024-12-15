@@ -43,7 +43,7 @@ export function Dashboard({ children }: { children: React.ReactNode }) {
     { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
     { name: "Customers", href: "/dashboard/customers", icon: UsersIcon },
     { name: "Emails", href: "/dashboard/emails", icon: EnvelopeIcon },
-    { name: "Posts", href: "/dashboard/posts", icon: DocumentDuplicateIcon },
+    // { name: "Posts", href: "/dashboard/posts", icon: DocumentDuplicateIcon },
     { name: "Events", href: "/dashboard/events", icon: CalendarIcon },
   ];
 

@@ -1,24 +1,30 @@
 "use client";
 
-import { isAuthenticated } from "@/utils/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 
 export default function isAuth(Component: any) {
   return function IsAuth(props: any) {
-    const auth = isAuthenticated;
+    const [auth, setAuth] = useState<boolean | null>(null);
 
     useEffect(() => {
-      if (!auth) {
-        return redirect("/");
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+      const isAuthenticated = !!accessToken && !!refreshToken;
+
+      setAuth(isAuthenticated);
+
+      if (!isAuthenticated) {
+        redirect("/");
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (!auth) {
+    // Render nothing while checking authentication
+    if (auth === null) {
       return null;
     }
 
+    // Render the component if authenticated
     return <Component {...props} />;
   };
 }

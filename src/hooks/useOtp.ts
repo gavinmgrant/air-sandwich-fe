@@ -1,60 +1,79 @@
 "use client";
 
-import useSWR from "swr";
-import { swrPoster } from "@/utils/swrFetcher";
 import { useState } from "react";
+import { swrPoster } from "@/utils/swrUtils";
 
-export const useGenerateOtp = (email: string) => {
+export const useGenerateOtp = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { data, error, mutate } = useSWR(null, { fetcher: swrPoster }); // Start with SWR disabled
+  const [isError, setIsError] = useState(false);
+  const [otpResponse, setOtpResponse] = useState<string | null>(null);
 
-  const generateOtp = async () => {
+  const generateOtp = async (email: string) => {
     if (!email) return;
 
     setIsLoading(true);
+    setIsError(false);
+
     try {
-      await mutate(`/auth/generate-otp?email=${encodeURIComponent(email)}`, {
-        revalidate: false, // Prevent SWR from auto-fetching
-      });
+      const response = await swrPoster(
+        `/auth/generate-otp?email=${encodeURIComponent(email)}`,
+        {},
+      );
+      setOtpResponse(response);
     } catch (err) {
       console.error("Error generating OTP:", err);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
   };
 
   return {
-    otp: data,
+    otpResponse,
     isLoading,
-    isError: !!error,
+    isError,
     generateOtp,
   };
 };
 
 export const useVerifyOtp = (email: string, otp: string) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { data, error, mutate } = useSWR(null, { fetcher: swrPoster }); // Start with SWR disabled
+  const [isError, setIsError] = useState(false);
+  const [isVerified, setIsVerified] = useState<boolean | null>(null);
 
   const verifyOtp = async () => {
-    if (!email || !otp) return;
+    email = localStorage.getItem("user-email") || email;
+    if (!email || !otp) return false;
 
     setIsLoading(true);
+    setIsError(false);
+
     try {
-      await mutate(
-        `/auth/verify-otp?email=${encodeURIComponent(email)}&otp=${otp}`,
-        { revalidate: false }, // Prevent SWR from auto-fetching
-      );
+      const url = `/auth/verify-otp?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`;
+      const response = await swrPoster(url, {});
+      if (response.accessToken && response.refreshToken) {
+        setIsVerified(true);
+        localStorage.setItem("accessToken", response.accessToken);
+        localStorage.setItem("refreshToken", response.refreshToken);
+        return true; // Return success
+      } else {
+        setIsVerified(false);
+        return false; // Return failure
+      }
     } catch (err) {
       console.error("Error verifying OTP:", err);
+      setIsError(true);
+      return false; // Return failure on error
     } finally {
       setIsLoading(false);
     }
   };
 
   return {
-    isVerified: data,
+    isVerified,
     isLoading,
-    isError: !!error,
+    isError,
     verifyOtp,
   };
 };
+

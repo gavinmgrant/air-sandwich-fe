@@ -1,7 +1,7 @@
 "use client";
 
 import { SWRConfig } from "swr";
-import { swrFetcher } from "@/utils/swrFetcher";
+import { swrFetcher } from "@/utils/swrUtils";
 
 export default function SWRProvider({
   children,
