@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSWRConfig } from "swr";
 import { useForm, Controller } from "react-hook-form";
@@ -16,11 +16,7 @@ export function OtpForm() {
   const router = useRouter();
   const { cache } = useSWRConfig();
   const userEmail = cache.get("user-email")?.data as string;
-  const {
-    isRegistered,
-    checkIsRegistered,
-    isLoading: isCheckingRegistration,
-  } = useIsRegistered();
+  const { checkIsRegistered } = useIsRegistered();
   const { control, handleSubmit, setValue, watch } = useForm<OtpFormValues>({
     defaultValues: {
       otp: Array(6).fill(""),
@@ -89,6 +85,14 @@ export function OtpForm() {
       console.error("OTP is incomplete.");
     }
   };
+
+  useEffect(() => {
+    // if all fields are filled in otpValues array, submit the form
+    if (otpValues.every((digit) => digit)) {
+      handleSubmit(onSubmit)();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [otpValues]);
 
   return (
     <form

@@ -73,7 +73,7 @@ export const errorHandlers: ErrorHandlers = {
       return api(retryRequest);
     } catch (refreshError) {
       console.error("Failed to refresh access token:", refreshError);
-      // clearUserSession();
+      clearUserSession();
     }
   },
 };

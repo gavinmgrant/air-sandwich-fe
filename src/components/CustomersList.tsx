@@ -4,6 +4,7 @@ import { useState, useEffect, use } from "react";
 import { formatPhoneNumber } from "@/utils/formatNumbers";
 import { Button } from "@/components/Button";
 import { CustomerModal } from "@/components/CustomerModal";
+import { CustomerBulkAddModal } from "@/components/CustomerBulkAddModal";
 import { Loader } from "@/components/Loader";
 import { CustomerFormData } from "@/types";
 import { swrPoster } from "@/utils/swrUtils";
@@ -12,6 +13,7 @@ export function CustomersList() {
   const [customers, setCustomers] = useState<CustomerFormData[]>([]);
   const [activeCustomer, setActiveCustomer] = useState<CustomerFormData>();
   const [modalOpen, setModalOpen] = useState(false);
+  const [bulkUploadModalOpen, setBulkUploadModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
 
   const fetchCustomers = async () => {
@@ -39,6 +41,11 @@ export function CustomersList() {
   const handleModalClose = () => {
     fetchCustomers();
     setModalOpen(false);
+    setBulkUploadModalOpen(false);
+  };
+
+  const handleBulkAdd = () => {
+    setBulkUploadModalOpen(true);
   };
 
   return (
@@ -49,6 +56,13 @@ export function CustomersList() {
         onClose={handleModalClose}
         activeCustomer={activeCustomer}
       />
+      
+      <CustomerBulkAddModal
+        title="Bulk upload customers"
+        open={bulkUploadModalOpen}
+        onClose={handleModalClose}
+      />
+
       <div>
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
@@ -63,7 +77,7 @@ export function CustomersList() {
               <Button color="blue" onClick={handleAddCustomer}>
                 Add customer
               </Button>
-              <Button color="slate" variant="outline">
+              <Button color="slate" variant="outline" onClick={handleBulkAdd}>
                 Bulk add
               </Button>
             </div>

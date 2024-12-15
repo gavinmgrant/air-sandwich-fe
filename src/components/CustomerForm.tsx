@@ -5,8 +5,8 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
 import { Toggle } from "@/components/Toggle";
-import { CustomerFormData } from "@/types";
 import { swrPoster } from "@/utils/swrUtils";
+import { CustomerFormData } from "@/types";
 
 interface CustomerFormProps {
   onClose: () => void;
@@ -29,21 +29,21 @@ export default function CustomerForm({
     }
   }, [activeCustomer, reset]);
 
-  const submitDefaultInfo = async (data: CustomerFormData) => {
+  const submitCustomerInfo = async (data: CustomerFormData) => {
     setIsLoading(true);
     await swrPoster("/customers/", data);
     setIsLoading(false);
   };
 
   const onSubmit: SubmitHandler<CustomerFormData> = async (data) => {
-    await submitDefaultInfo(data);
+    await submitCustomerInfo(data);
     onClose();
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="relative mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2"
+      className="relative mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2"
     >
       <TextField label="First name" type="text" {...register("firstName")} />
       <TextField label="Last name" type="text" {...register("lastName")} />
