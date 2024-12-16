@@ -10,6 +10,7 @@ import {
 type ImageUploadProps = {
   label?: string;
   isUser?: boolean;
+  smallPreview?: boolean;
   value?: File | null;
   onChange?: (file: File | null) => void;
 };
@@ -17,6 +18,7 @@ type ImageUploadProps = {
 export function ImageUpload({
   label = "Upload Image",
   isUser = true,
+  smallPreview = true,
   value,
   onChange,
 }: ImageUploadProps) {
@@ -25,6 +27,15 @@ export function ImageUpload({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     onChange?.(file);
+  };
+
+  const handleRemoveImage = () => {
+    onChange?.(null);
+    setPreview(null);
+    const input = document.getElementById("file-upload") as HTMLInputElement;
+    if (input) {
+      input.value = "";
+    }
   };
 
   useEffect(() => {
@@ -57,26 +68,42 @@ export function ImageUpload({
           onChange={handleImageChange}
         />
 
-        {preview ? (
-          <div className="h-12 w-12 shrink-0 rounded-md border border-gray-200">
-            <Image
-              className="h-full w-full rounded-md object-contain"
-              src={preview}
-              alt="Preview"
-              width={48}
-              height={48}
-            />
-          </div>
-        ) : (
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-gray-200 dark:bg-slate-800">
-            {isUser ? (
-              <UserCircleIcon className="h-6 w-6 text-gray-500 dark:text-gray-300" />
-            ) : (
-              <BuildingOfficeIcon className="h-6 w-6 text-gray-500 dark:text-gray-300" />
-            )}
-          </div>
-        )}
+        {smallPreview &&
+          (preview ? (
+            <div className="h-12 w-12 shrink-0 rounded-md border border-gray-200">
+              <Image
+                className="h-full w-full rounded-md object-contain"
+                src={preview}
+                alt="Preview"
+                width={48}
+                height={48}
+              />
+            </div>
+          ) : (
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-gray-200 dark:bg-slate-800">
+              {isUser ? (
+                <UserCircleIcon className="h-6 w-6 text-gray-500 dark:text-gray-300" />
+              ) : (
+                <BuildingOfficeIcon className="h-6 w-6 text-gray-500 dark:text-gray-300" />
+              )}
+            </div>
+          ))}
       </div>
+
+      {!smallPreview && preview && (
+        <div
+          className="mt-2 rounded-md border border-gray-200 hover:cursor-pointer"
+          onClick={handleRemoveImage}
+        >
+          <Image
+            className="h-full w-full rounded-md object-contain"
+            src={preview}
+            alt="Preview"
+            width={400}
+            height={300}
+          />
+        </div>
+      )}
     </div>
   );
 }
